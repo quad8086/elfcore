@@ -56,23 +56,6 @@ Date::d() const {
   return _d % 100;
 }
 
-Date
-elf::find_date_from_file(const string& fname, date_t user_date) {
-  if(user_date>0)
-    return Date(user_date);
-
-  std::regex fmt(".*(\\d{8}).*");
-  std::smatch match;
-
-  if(!std::regex_match(fname, match, fmt))
-    throw elf_error("find_date_from_file: unparseable pattern="+fname);
-  auto s_ymd = std::string(match[1]);
-  if(s_ymd.size() != Date::required_len)
-    throw elf_error("find_date_from_file: invalid pattern="+fname);
-
-  return Date(s_ymd);
-}
-
 bool
 elf::validate_date(date_t date) {
   if(date <= 0)
@@ -123,6 +106,23 @@ elf::validate_date(date_t date) {
     return false;
 
   return true;
+}
+
+Date
+elf::find_date_from_file(const string& fname, date_t user_date) {
+  if(user_date>0)
+    return Date(user_date);
+
+  std::regex fmt(".*(\\d{8}).*");
+  std::smatch match;
+
+  if(!std::regex_match(fname, match, fmt))
+    throw elf_error("find_date_from_file: unparseable pattern="+fname);
+  auto s_ymd = std::string(match[1]);
+  if(s_ymd.size() != Date::required_len)
+    throw elf_error("find_date_from_file: invalid pattern="+fname);
+
+  return Date(s_ymd);
 }
 
 Timestamp::Timestamp(const string& s_ts) {
